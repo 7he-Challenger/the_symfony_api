@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - name: checkout
-        uses: action/checkout@v3
+        uses: action/checkout@v2
 
       - name: Set up php the project
         uses: shivammathur/setup-php@verbose
