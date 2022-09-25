@@ -2,7 +2,7 @@
 
 ![health check](https://github.com/7he-Challenger/the_symfony_api/actions/workflows/github-actions-symfony.yml/badge.svg)
 
-**Requirements : **
+**Requirements :**
 ```
 - php version > 7.4
 - symfony cli
