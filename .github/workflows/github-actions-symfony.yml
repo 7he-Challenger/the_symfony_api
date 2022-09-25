@@ -22,3 +22,6 @@ jobs:
 
       - name: Checking symfony installation
         run: php bin/console about
+
+      - name: Config db
+        run: php bin/console d:d:c
