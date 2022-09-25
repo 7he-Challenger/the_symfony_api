@@ -1,4 +1,6 @@
-# The_symfony_api | Techzara Platform API
+# The_symfony_api | Techzara Platform API.
+
+![health check](https://github.com/7he-Challenger/the_symfony_api/actions/workflows/github-actions-symfony.yml/badge.svg)
 
 **Requirements : **
 ```
