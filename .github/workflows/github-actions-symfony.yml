@@ -34,6 +34,6 @@ jobs:
         run: php bin/console about
 
       - name: Config db
-        run: php bin/console d:d:c
+        run: php bin/console d:s:u --force
         env:
           DATABASE_URL: mysql://root:symfony@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/the_platform
