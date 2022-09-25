@@ -19,6 +19,6 @@ class ThePlatformController extends AbstractController
     */
     public function homePage(): Response
     {
-        return $this->render('home-page/home.html.twig');
+        return $this->render('home-page/home.html.twig' ,  ['team' => 'The Challengers']);
     }
 }
