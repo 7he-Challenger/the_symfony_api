@@ -4,12 +4,13 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:8.0
+        image: mysql:latest
         env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
           MYSQL_ROOT_PASSWORD: 'th3p@tform'
           MYSQL_DATABASE: 'the_platform'
         ports:
-          - 8888:3306
+          - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
       fail-fast: true
@@ -21,7 +22,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up php the project
-        uses: shivammathur/setup-php@verbose
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, mysql, xml, ctype, intl, iconv, filter, gd, json, pdo
@@ -34,3 +35,5 @@ jobs:
 
       - name: Config db
         run: php bin/console d:d:c
+        env:
+          DATABASE_URL: "mysql://root:'th3p@tform'@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/the_platform"
