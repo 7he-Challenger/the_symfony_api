@@ -41,4 +41,4 @@ jobs:
       - name: testing
         run: |
           composer require --dev symfony/test-pack
-          php bin/phpunit --stop-on-failure
+          php bin/phpunit --stop-on-failure tests/
