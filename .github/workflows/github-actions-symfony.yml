@@ -7,8 +7,8 @@ jobs:
         image: mysql:latest
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: false
-          MYSQL_ROOT_PASSWORD: 'th3p@tform'
-          MYSQL_DATABASE: 'the_platform'
+          MYSQL_ROOT_PASSWORD: symfony'
+          MYSQL_DATABASE: the_platform
         ports:
           - 3306/tcp
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -36,4 +36,4 @@ jobs:
       - name: Config db
         run: php bin/console d:d:c
         env:
-          DATABASE_URL: "mysql://root:'th3p@tform'@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/the_platform"
+          DATABASE_URL: mysql://root:symfony@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/the_platform
