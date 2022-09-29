@@ -7,6 +7,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Controller\UserListController;
+use App\Controller\UserUnityController;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -16,6 +18,23 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @ApiResource(security="is_granted('ROLE_USER') OR is_granted('ROLE_ADMIN')")
  */
+
+#[ApiResource(
+    itemOperations:[
+        'GetOneMember' => [
+            'method' => 'GET',
+            'path' => '/user/{id}/GetOneMember',
+            'controller' => UserUnityController::class
+        ]
+    ],
+    collectionOperations:[
+        'ListAllMember' => [
+            'method' => 'GET',
+            'path' => '/user/ListAllMember',
+            'controller' => UserListController::class
+        ]
+    ]
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
@@ -33,6 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", unique=true)
      */
+    
     private ?string $username;
 
     /**
@@ -50,9 +70,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private ?array $roles;
 
-    /**
-     * @ORM\OneToOne(targetEntity=UserInformation::class)
-     */
+    #[ORM\OneToOne(targetEntity:UserInformation::class, cascade:'persist')]
     private ?UserInformation $userInfo;
 
     /**
@@ -177,5 +195,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __call($name, $arguments)
     {
         return $this->username;
+    }
+
+    public function getUserIdentifier()
+    {
+        
     }
 }

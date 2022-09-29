@@ -6,13 +6,15 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity()
  *
  * Class UserInformation.
- */
+ */ 
 class UserInformation
 {
     /**
@@ -25,16 +27,19 @@ class UserInformation
     /**
      * @ORM\Column(type="string", nullable=true)
      */
+  
     private ?string $address;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      */
+    
     private ?string $phone;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
+   
     private ?string $photos;
 
     /**
