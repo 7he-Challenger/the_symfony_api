@@ -45,11 +45,11 @@ class UserCommand extends Command
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
         $symfonyStyle->note("Create user test");
-        $user = new User();
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => 'test'])? : new User();
         $password = $this->passwordHasherEncoder->hashPassword($user, '123456');
         $user->setUsername('test');
         $user->setPassword($password);
-        $user->setRoles('ROLE_ADMIN');
+        $user->setRoles(['ROLE_ADMIN']);
         $this->entityManager->persist($user);
         $this->entityManager->flush();
         $symfonyStyle->note("Create user test");

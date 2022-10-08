@@ -6,7 +6,7 @@ security:
         App\Entity\User: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory:
+        the_platform_user:
             entity:
                 class: App\Entity\User
                 property: username
@@ -17,30 +17,27 @@ security:
         login:
             pattern: ^/api/login
             stateless: true
-            provider: users_in_memory
+            provider: the_platform_user
             json_login:
                 check_path: /api/login_check
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            jwt: ~
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            lazy: true
-            provider: users_in_memory
-
-        api:
             pattern: ^/api
-            provider: users_in_memory
+            provider: the_platform_user
             stateless: true
             jwt: ~
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/login, roles: PUBLIC_ACCESS }
-        - { path: ^/api/users, roles: IS_AUTHENTICATED_FULLY }
-        - { path: ^/api, roles: PUBLIC_ACCESS }
+        - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/users, roles: [ROLE_ADMIN] }
+        - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 when@test:
     security:

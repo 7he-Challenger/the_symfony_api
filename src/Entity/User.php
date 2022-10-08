@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity()
  *
- * @ApiResource(security="is_granted('ROLE_USER') OR is_granted('ROLE_ADMIN')")
+ * @ApiResource(security="is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -75,19 +75,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getRoles()
+    public function getRoles(): ?array
     {
         return $this->roles;
     }
 
     /**
-     * @param string|null $role
+     * @param array|null $role
      *
      * @return User
      */
-    public function setRoles(?string $role): User
+    public function setRoles(?array $role): User
     {
-        $this->roles[] = $role ? : 'ROLE_USER';
+        $this->roles = is_array($role) ? $role : ['ROLE_USER'];
 
         return $this;
     }
