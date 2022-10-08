@@ -14,12 +14,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity()
  *
  * Class UserInformation.
- *
- * @ApiResource(
- *     security="is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')",
- *     normalizationContext={"groups"="read"},
- *     denormalizationContext={"groups"="write"}
- *     )
  */
 class UserInformation
 {
