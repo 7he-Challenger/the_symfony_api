@@ -6,12 +6,20 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity()
  *
  * Class UserInformation.
+ *
+ * @ApiResource(
+ *     security="is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')",
+ *     normalizationContext={"groups"="read"},
+ *     denormalizationContext={"groups"="write"}
+ *     )
  */
 class UserInformation
 {
@@ -24,16 +32,22 @@ class UserInformation
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @Groups({"read", "write"})
      */
     private ?string $address;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @Groups({"read", "write"})
      */
     private ?string $phone;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @Groups({"read", "write"})
      */
     private ?string $photos;
 

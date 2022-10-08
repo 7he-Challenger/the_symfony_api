@@ -10,11 +10,16 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity()
  *
- * @ApiResource(security="is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')")
+ * @ApiResource(
+ *     security="is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')",
+ *     normalizationContext={"groups"="read"},
+ *     denormalizationContext={"groups"="write"}
+ *     )
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -22,36 +27,49 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id()
      * @ORM\Column()
      * @ORM\GeneratedValue()
+     * @Groups({"read"})
      */
     private ?int $id;
 
     /**
      * @ORM\Column(type="text")
+     *
+     * @Groups({"write"})
      */
     private ?string $password;
 
     /**
      * @ORM\Column(type="string", unique=true)
+     *
+     * @Groups({"read", "write"})
      */
     private ?string $username;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @Groups({"read", "write"})
      */
     private ?string $firstname;
 
     /**
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @Groups({"read", "write"})
      */
     private ?string $lastname;
 
     /**
      * @ORM\Column(type="simple_array")
+     *
+     * @Groups({"read", "write"})
      */
     private ?array $roles;
 
     /**
      * @ORM\OneToOne(targetEntity=UserInformation::class)
+     *
+     * @Groups({"read", "write"})
      */
     private ?UserInformation $userInfo;
 
