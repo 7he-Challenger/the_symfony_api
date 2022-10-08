@@ -10,6 +10,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 
 /**
  * Class LoginListener.
+ * This file is part of techzara_platform | all right reserve to the_challengers https://github.com/7he-Challenger
  */
 class LoginListener
 {
@@ -25,7 +26,7 @@ class LoginListener
             return;
         }
 
-        $payload['user'] = ['id' => $user->getId(), 'username' => $user->getUsername()];
+        $payload['user'] = ['id' => $user->getId(), 'username' => $user->getUsername(), 'firstname' => $user->getFirstname(), 'lastname' => $user->getLastname()];
         $authenticationSuccessEvent->setData($payload);
     }
 }

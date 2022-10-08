@@ -14,6 +14,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity()
  *
  * Class UserInformation.
+ *
+ * This file is part of techzara_platform | all right reserve to the_challengers https://github.com/7he-Challenger
  */
 class UserInformation
 {

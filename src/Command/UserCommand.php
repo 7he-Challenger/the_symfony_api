@@ -1,6 +1,8 @@
 <?php
 /**
  * @author <julienrajerison5@gmail.com>
+ *
+ * This file is part of techzara_platform | all right reserve to the_challengers https://github.com/7he-Challenger
  */
 declare(strict_types=1);
 
