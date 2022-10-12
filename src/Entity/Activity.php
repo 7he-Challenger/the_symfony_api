@@ -7,15 +7,20 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * Class Activity.
  *
  * @ORM\Entity()
  * @ApiResource(security="is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')")
+ * @ApiFilter(DateFilter::class, properties={"startDate"})
+ * @ApiFilter(SearchFilter::class, properties={"title", "description"})
  */
 class Activity
 {
@@ -51,7 +56,14 @@ class Activity
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private ?DateTime $date;
+    private ?DateTime $startDate;
+
+    /**
+     * @var DateTime|null
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private ?DateTime $endDate;
 
     /**
      * @var string|null
@@ -129,25 +141,6 @@ class Activity
         return $this;
     }
 
-    /**
-     * @return DateTime|null
-     */
-    public function getDate(): ?DateTime
-    {
-        return $this->date;
-    }
-
-    /**
-     * @param DateTime|null $date
-     *
-     * @return Activity
-     */
-    public function setDate(?DateTime $date): Activity
-    {
-        $this->date = $date;
-
-        return $this;
-    }
 
     /**
      * @return string|null
