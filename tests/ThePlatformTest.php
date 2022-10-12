@@ -7,8 +7,14 @@ namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Class ThePlatformTest.
+ */
 class ThePlatformTest extends WebTestCase
 {
+    /**
+     * Test main route
+     */
     public function testHomePage()
     {
         $client = self::createClient();
