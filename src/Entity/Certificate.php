@@ -47,7 +47,7 @@ class Certificate
     /**
      * @ORM\Column(type="text")
      *
-     * @Groups({"read", "write"})
+     * @Groups({"read"})
      */
     private ?string $certId;
 
