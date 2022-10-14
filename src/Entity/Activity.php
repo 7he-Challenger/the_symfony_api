@@ -94,6 +94,21 @@ class Activity
     private ?int $type;
 
     /**
+     * @var bool|null
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private ?bool $isEnable;
+
+    /**
+     * Activity constructor
+     */
+    public function __construct()
+    {
+        $this->isEnable = true;
+    }
+
+    /**
      * @return int|null
      */
     public function getId(): ?int
@@ -218,6 +233,66 @@ class Activity
     public function setType(?int $type): Activity
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getStartDate(): ?DateTime
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param DateTime|null $startDate
+     *
+     * @return Activity
+     */
+    public function setStartDate(?DateTime $startDate): Activity
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getEndDate(): ?DateTime
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @param DateTime|null $endDate
+     *
+     * @return Activity
+     */
+    public function setEndDate(?DateTime $endDate): Activity
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getIsEnable(): ?bool
+    {
+        return $this->isEnable;
+    }
+
+    /**
+     * @param bool|null $isEnable
+     *
+     * @return Activity
+     */
+    public function setIsEnable(?bool $isEnable): Activity
+    {
+        $this->isEnable = $isEnable;
 
         return $this;
     }
