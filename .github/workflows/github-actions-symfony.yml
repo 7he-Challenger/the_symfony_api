@@ -41,4 +41,8 @@ jobs:
       - name: testing
         run: |
           echo ========== testing =========
+          php bin/console --env=test doctrine:database:create
+          php bin/console --env=test d:s:u -f
           php bin/phpunit --stop-on-failure tests/
+        env:
+          DATABASE_URL: mysql://root:symfony@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/the_platform_test
