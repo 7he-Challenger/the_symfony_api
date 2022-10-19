@@ -20,7 +20,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * @ORM\Entity()
  * @ApiResource(security="is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')")
  * @ApiFilter(DateFilter::class, properties={"startDate"})
- * @ApiFilter(SearchFilter::class, properties={"title", "description"})
+ * @ApiFilter(SearchFilter::class, properties={"title":"partial", "description":"partial", "isEnable": "exact"})
  */
 class Activity
 {
