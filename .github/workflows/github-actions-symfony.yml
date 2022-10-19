@@ -30,6 +30,9 @@ jobs:
       - name: install packages
         run: composer install --no-progress --no-suggest --prefer-dist
 
+      - name: Configure JWT
+        run: php bin/console lexik:jwt:generate-keypair
+
       - name: Checking symfony installation
         run: php bin/console about
 
