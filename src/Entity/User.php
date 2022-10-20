@@ -8,11 +8,13 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ORM\Entity()
@@ -22,6 +24,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     normalizationContext={"groups"="read"},
  *     denormalizationContext={"groups"="write"}
  *     )
+ * @ApiFilter(SearchFilter::class, properties={"username":"partial", "firstname":"partial", "lastname": "exact", "isEnable": "exact"})
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -74,6 +77,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"read", "write"})
      */
     private ?UserInformation $userInfo;
+
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(type="boolean")
+     */
+    private bool $isEnable;
+
+    public function __construct()
+    {
+        $this->isEnable = true;
+    }
 
     /**
      * @return int|null
@@ -190,6 +205,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUserInfo(?UserInformation $userInfo): User
     {
         $this->userInfo = $userInfo;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getIsEnable(): ?bool
+    {
+        return $this->isEnable;
+    }
+
+    /**
+     * @param bool|null $isEnable
+     *
+     * @return User
+     */
+    public function setIsEnable(?bool $isEnable): User
+    {
+        $this->isEnable = $isEnable;
 
         return $this;
     }
