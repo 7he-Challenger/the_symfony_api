@@ -31,21 +31,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue()
      * @Groups({"read"})
      */
-    private ?int $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="text")
      *
      * @Groups({"write"})
      */
-    private ?string $password;
+    private string $password;
 
     /**
      * @ORM\Column(type="string", unique=true)
      *
      * @Groups({"read", "write"})
      */
-    private ?string $username;
+    private string $username;
 
     /**
      * @ORM\Column(type="string", nullable=true)
@@ -66,7 +66,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @Groups({"read", "write"})
      */
-    private ?array $roles;
+    private array $roles;
 
     /**
      * @ORM\OneToOne(targetEntity=UserInformation::class)
@@ -162,12 +162,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return '';
     }
 
-    public function getUsername(): ?string
+    public function getUsername(): string
     {
         return $this->username;
     }
 
-    public function setUsername(?string $username)
+    public function setUsername(string $username)
     {
         $this->username = $username;
 
