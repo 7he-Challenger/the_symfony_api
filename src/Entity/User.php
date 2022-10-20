@@ -52,14 +52,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @Groups({"read", "write"})
      */
-    private ?string $firstname;
+    private ?string $firstname = null;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      *
      * @Groups({"read", "write"})
      */
-    private ?string $lastname;
+    private ?string $lastname = null;
 
     /**
      * @ORM\Column(type="simple_array")
