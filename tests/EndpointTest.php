@@ -70,6 +70,7 @@ class EndpointTest extends WebTestCase
     public function getToken(): void
     {
         $this->client = self::createClient();
+        $this->createUser();
 
         // retrieve a token
         $this->client->request(

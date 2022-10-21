@@ -13,6 +13,7 @@ class AuthenticationTest extends WebTestCase
     public function testTokenGenerator(): void
     {
         $client = self::createClient();
+        $this->createUser();
 
         // retrieve a token
         $client->request(
