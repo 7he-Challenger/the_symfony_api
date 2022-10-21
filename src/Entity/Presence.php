@@ -11,13 +11,15 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 
 /**
  * Class Presence.
  *
  * @ORM\Entity()
  * @ApiResource()
- * @ApiFilter(SearchFilter::class, properties={"isPresent": "exact", "user": "exact"})
+ * @ApiFilter(SearchFilter::class, properties={"isPresent": "exact", "user": "exact", "user.username": "partial"})
+ * @ApiFilter(DateFilter::class, properties={"date"})
  */
 class Presence
 {
