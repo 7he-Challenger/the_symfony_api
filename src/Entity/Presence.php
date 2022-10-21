@@ -5,15 +5,19 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * Class Presence.
  *
  * @ORM\Entity()
  * @ApiResource()
+ * @ApiFilter(SearchFilter::class, properties={"isPresent": "exact", "user": "exact"})
  */
 class Presence
 {
@@ -37,8 +41,19 @@ class Presence
      * @var DateTime
      *
      * @ORM\Column(type="datetime")
+     * @ApiProperty(attributes={
+     *     "normalization_context"={
+     *         "datetime_format"="Y-m-d",
+     *     },
+     * })
      */
     private DateTime $date;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="presences")
+     * @ORM\JoinColumn(nullable=false, referencedColumnName="id")
+     */
+    private User $user;
 
     /**
      * @return int
@@ -96,6 +111,26 @@ class Presence
     public function setDate(DateTime $date): Presence
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return Presence
+     */
+    public function setUser(User $user): Presence
+    {
+        $this->user = $user;
 
         return $this;
     }

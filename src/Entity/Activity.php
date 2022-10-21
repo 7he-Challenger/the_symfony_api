@@ -8,6 +8,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -53,13 +54,22 @@ class Activity
 
     /**
      * @var DateTime|null
-     *
+     * @ApiProperty(attributes={
+     *     "normalization_context"={
+     *         "datetime_format"="Y-m-d",
+     *     },
+     * })
      * @ORM\Column(type="datetime", nullable=true)
      */
     private ?DateTime $startDate;
 
     /**
      * @var DateTime|null
+     * @ApiProperty(attributes={
+     *     "normalization_context"={
+     *         "datetime_format"="Y-m-d",
+     *     },
+     * })
      *
      * @ORM\Column(type="datetime", nullable=true)
      */

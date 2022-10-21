@@ -49,6 +49,24 @@ class EndpointTest extends WebTestCase
         $this->assertResponseIsSuccessful();
     }
 
+    public function testPresenceEndpoint()
+    {
+        $this->getToken();
+        $headers = array(
+            'HTTP_AUTHORIZATION' => "Bearer $this->token",
+            'CONTENT_TYPE' => 'application/json',
+        );
+
+        // test without token
+        $this->client->request('GET', '/api/presences', [], []);
+        self::assertResponseStatusCodeSame(401);
+
+        // test authorized token
+        $this->client->request('GET', '/api/presences', [], [], $headers);
+
+        $this->assertResponseIsSuccessful();
+    }
+
     public function getToken(): void
     {
         $this->client = self::createClient();

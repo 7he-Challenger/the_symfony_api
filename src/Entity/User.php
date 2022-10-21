@@ -10,6 +10,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -85,9 +87,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private bool $isEnable;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Presence::class, mappedBy="user")
+     */
+    private Collection $presences;
+
     public function __construct()
     {
         $this->isEnable = true;
+        $this->presences = new ArrayCollection();
     }
 
     /**
@@ -225,6 +233,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsEnable(?bool $isEnable): User
     {
         $this->isEnable = $isEnable;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getPresences(): ArrayCollection
+    {
+        return $this->presences;
+    }
+
+    /**
+     * @param Presence $presence
+     *
+     * @return User
+     */
+    public function addPresence(Presence $presence): User
+    {
+        if (!$this->presences->contains($presence)) {
+            $this->presences->add($presence);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Presence $presence
+     *
+     * @return User
+     */
+    public function removePresence(Presence $presence): User
+    {
+        $this->presences->removeElement($presence);
 
         return $this;
     }
