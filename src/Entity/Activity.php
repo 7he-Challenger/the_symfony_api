@@ -20,8 +20,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *
  * @ORM\Entity()
  * @ApiResource(security="is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')")
- * @ApiFilter(DateFilter::class, properties={"startDate"})
- * @ApiFilter(SearchFilter::class, properties={"title":"partial", "description":"partial", "isEnable": "exact"})
+ * @ApiFilter(DateFilter::class, properties={"startDate", "endDate"})
+ * @ApiFilter(SearchFilter::class, properties={"title":"partial", "description":"partial", "isEnable": "exact", "isPublic": "exact"})
  */
 class Activity
 {
@@ -108,6 +108,13 @@ class Activity
      *
      * @ORM\Column(type="boolean", nullable=true)
      */
+    private ?bool $isPublic;
+
+    /**
+     * @var bool|null
+     *
+     * @ORM\Column(type="boolean", nullable=true)
+     */
     private ?bool $isEnable;
 
     /**
@@ -116,6 +123,7 @@ class Activity
     public function __construct()
     {
         $this->isEnable = true;
+        $this->isPublic = false;
     }
 
     /**
@@ -303,6 +311,26 @@ class Activity
     public function setIsEnable(?bool $isEnable): Activity
     {
         $this->isEnable = $isEnable;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getIsPublic(): ?bool
+    {
+        return $this->isPublic;
+    }
+
+    /**
+     * @param bool|null $isPublic
+     *
+     * @return Activity
+     */
+    public function setIsPublic(?bool $isPublic): Activity
+    {
+        $this->isPublic = $isPublic;
 
         return $this;
     }
