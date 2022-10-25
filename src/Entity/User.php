@@ -9,7 +9,9 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,6 +19,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity()
@@ -24,8 +28,14 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * @ApiResource(
  *     security="is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')",
  *     normalizationContext={"groups"="read"},
- *     denormalizationContext={"groups"="write"}
- *     )
+ *     denormalizationContext={"groups"="write"},
+ *     collectionOperations={
+ *          "get",
+ *          "post" = {
+ *              "validation_groups"={"Default", "create"}
+ *          }
+ *     }
+ *)
  * @ApiFilter(SearchFilter::class, properties={"username":"partial", "firstname":"partial", "lastname": "exact", "isEnable": "exact"})
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -40,8 +50,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="text")
-     *
-     * @Groups({"write"})
      */
     private string $password;
 
@@ -49,6 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", unique=true)
      *
      * @Groups({"read", "write"})
+     * @Assert\NotBlank(groups={"create"})
      */
     private string $username;
 
@@ -74,7 +83,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles;
 
     /**
-     * @ORM\OneToOne(targetEntity=UserInformation::class)
+     * @ORM\OneToOne(targetEntity=UserInformation::class, cascade={"persist", "remove"})
      *
      * @Groups({"read", "write"})
      */
@@ -88,6 +97,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isEnable;
 
     /**
+     * @var string|null
+     *
+     * @Groups("write")
+     *
+     * @SerializedName("password")
+     * @Assert\NotBlank(groups={"create"})
+     */
+    private ?string $plainPassword = '';
+
+    /**
+     * @var DateTime|null
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private DateTime $createdAt;
+
+    /**
      * @ORM\OneToMany(targetEntity=Presence::class, mappedBy="user")
      */
     private Collection $presences;
@@ -96,6 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->isEnable = true;
         $this->presences = new ArrayCollection();
+        $this->createdAt = new DateTime('now');
     }
 
     /**
@@ -182,7 +209,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): string
     {
-        return '';
+        return $this->plainPassword = '';
     }
 
     public function getUsername(): string
@@ -267,6 +294,46 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removePresence(Presence $presence): User
     {
         $this->presences->removeElement($presence);
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param string|null $plainPassword
+     *
+     * @return User
+     */
+    public function setPlainPassword(?string $plainPassword): User
+    {
+        $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getCreatedAt(): ?DateTime
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param DateTime|null $createdAt
+     *
+     * @return User
+     */
+    public function setCreatedAt(?DateTime $createdAt): User
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }
