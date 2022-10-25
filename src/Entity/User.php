@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -36,7 +37,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          }
  *     }
  *)
- * @ApiFilter(SearchFilter::class, properties={"username":"partial", "firstname":"partial", "lastname": "exact", "isEnable": "exact"})
+ * @ApiFilter(DateFilter::class, properties={"createdAt"})
+ * @ApiFilter(SearchFilter::class, properties={"username":"partial", "firstname":"partial", "lastname": "partial", "isEnable": "exact"})
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -110,6 +112,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var DateTime|null
      *
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"read"})
      */
     private DateTime $createdAt;
 
