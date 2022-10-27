@@ -27,7 +27,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity()
  *
  * @ApiResource(
- *     security="is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')",
+ *     security="is_granted('ROLE_ADMIN') or is_granted('ROLE_MEMBER')",
  *     normalizationContext={"groups"="read"},
  *     denormalizationContext={"groups"="write"},
  *     collectionOperations={
@@ -38,7 +38,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     }
  *)
  * @ApiFilter(DateFilter::class, properties={"createdAt"})
- * @ApiFilter(SearchFilter::class, properties={"username":"partial", "firstname":"partial", "lastname": "partial", "isEnable": "exact"})
+ * @ApiFilter(SearchFilter::class, properties={"username":"partial", "firstname":"partial", "lastname": "partial", "userType": "exact", "roleInt": "exact", "isEnable": "exact"})
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -79,8 +79,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="simple_array")
-     *
-     * @Groups({"read"})
      */
     private array $roles;
 
@@ -127,12 +125,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"read", "write"})
      */
-    private int $userType = 1;
+    private ?int $userType = 1;
 
     /**
      * @var int|null
      *
      * @SerializedName("role")
+     * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"read", "write"})
      */
     private ?int $roleInt = 1;
 
@@ -372,6 +372,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoleInt(?int $roleInt): User
     {
         $this->roleInt = $roleInt;
+
+        if (1 === $this->getRoleInt()){
+            $this->setRoles(['ROLE_MEMBER']);
+        }
+
+        if (32 === $this->getRoleInt()){
+            $this->setRoles(['ROLE_ADMIN', 'ROLE_MEMBER']);
+        }
 
         return $this;
     }

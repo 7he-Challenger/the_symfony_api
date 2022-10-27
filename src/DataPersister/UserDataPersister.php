@@ -38,7 +38,6 @@ class UserDataPersister implements DataPersisterInterface
             $data->eraseCredentials();
         }
 
-        $this->updateRole($data);
         $this->entityManager->persist($data);
         $this->entityManager->flush();
     }
@@ -47,18 +46,5 @@ class UserDataPersister implements DataPersisterInterface
     {
         $this->entityManager->remove($data);
         $this->entityManager->flush();
-    }
-
-    public function updateRole($data)
-    {
-        if ($data instanceof User && $data->getRoleInt()){
-            if (1 === $data->getRoleInt()){
-                $data->setRoles(['ROLE_MEMBER']);
-            }
-
-            if (32 === $data->getRoleInt()){
-                $data->setRoles(['ROLE_ADMIN']);
-            }
-        }
     }
 }
