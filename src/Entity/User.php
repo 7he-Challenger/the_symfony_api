@@ -80,7 +80,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="simple_array")
      *
-     * @Groups({"read", "write"})
+     * @Groups({"read"})
      */
     private array $roles;
 
@@ -120,6 +120,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=Presence::class, mappedBy="user")
      */
     private Collection $presences;
+
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"read", "write"})
+     */
+    private int $userType = 1;
+
+    /**
+     * @var int|null
+     *
+     * @SerializedName("role")
+     */
+    private ?int $roleInt = 1;
 
     public function __construct()
     {
@@ -337,6 +352,46 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCreatedAt(?DateTime $createdAt): User
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getRoleInt(): ?int
+    {
+        return $this->roleInt;
+    }
+
+    /**
+     * @param int|null $roleInt
+     *
+     * @return User
+     */
+    public function setRoleInt(?int $roleInt): User
+    {
+        $this->roleInt = $roleInt;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getUserType(): ?int
+    {
+        return $this->userType;
+    }
+
+    /**
+     * @param int|null $userType
+     *
+     * @return User
+     */
+    public function setUserType(?int $userType): User
+    {
+        $this->userType = $userType;
 
         return $this;
     }
