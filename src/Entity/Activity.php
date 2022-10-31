@@ -11,6 +11,8 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
@@ -118,12 +120,20 @@ class Activity
     private ?bool $isEnable;
 
     /**
+     * @var Collection|null
+     *
+     * @ORM\OneToMany(targetEntity=MediaObject::class, mappedBy="poster", cascade={"all"})
+     */
+    private ?Collection $posters;
+
+    /**
      * Activity constructor
      */
     public function __construct()
     {
         $this->isEnable = true;
         $this->isPublic = false;
+        $this->posters = new ArrayCollection();
     }
 
     /**
@@ -331,6 +341,38 @@ class Activity
     public function setIsPublic(?bool $isPublic): Activity
     {
         $this->isPublic = $isPublic;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getPosters()
+    {
+        return $this->posters;
+    }
+
+    /**
+     * @param MediaObject|null $posters
+     *
+     * @return Activity
+     */
+    public function addPosters(?MediaObject $posters): Activity
+    {
+        $this->posters->add($posters);
+
+        return $this;
+    }
+
+    /**
+     * @param MediaObject|null $posters
+     *
+     * @return Activity
+     */
+    public function removePosters(?MediaObject $posters): Activity
+    {
+        $this->posters->removeElement($posters);
 
         return $this;
     }
