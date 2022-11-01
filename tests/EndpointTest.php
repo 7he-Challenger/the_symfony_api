@@ -6,65 +6,59 @@
 namespace App\Tests;
 
 use App\Entity\User;
+use Generator;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
+/**
+ * Class EndpointTest.
+ *
+ * This class ensure that all HTTP Get will return 200.
+ */
 class EndpointTest extends WebTestCase
 {
     private ?string $token = '';
-    private $client;
+    private ?KernelBrowser $client = null;
 
-    public function testUserEndpoint()
+    /**
+     * @dataProvider routesProvider
+     *
+     * @param array $payload
+     */
+    public function testEndpointGroups(array $payload)
     {
+        $method = $payload[0];
+        $route = $payload[1];
+
+        // generate client and token
         $this->getToken();
-        $headers = array(
-            'HTTP_AUTHORIZATION' => "Bearer {$this->token}",
-            'CONTENT_TYPE' => 'application/json',
-        );
 
         // test without token
-        $this->client->request('GET', '/api/users', [], []);
+        $this->client->request($method, $route, [], []);
         self::assertResponseStatusCodeSame(401);
 
-        // test authorized token
-        $this->client->request('GET', '/api/users', [], [], $headers);
-
-        $this->assertResponseIsSuccessful();
-    }
-
-    public function testActivityEndpoint()
-    {
-        $this->getToken();
-        $headers = array(
-            'HTTP_AUTHORIZATION' => "Bearer {$this->token}",
-            'CONTENT_TYPE' => 'application/json',
-        );
-
-        // test without token
-        $this->client->request('GET', '/api/activities', [], []);
-        self::assertResponseStatusCodeSame(401);
-
-        // test authorized token
-        $this->client->request('GET', '/api/activities', [], [], $headers);
-
-        $this->assertResponseIsSuccessful();
-    }
-
-    public function testPresenceEndpoint()
-    {
-        $this->getToken();
-        $headers = array(
+        $headers = [
             'HTTP_AUTHORIZATION' => "Bearer $this->token",
             'CONTENT_TYPE' => 'application/json',
-        );
-
-        // test without token
-        $this->client->request('GET', '/api/presences', [], []);
-        self::assertResponseStatusCodeSame(401);
+        ];
 
         // test authorized token
-        $this->client->request('GET', '/api/presences', [], [], $headers);
-
+        $this->client->request($method, $route, [], [], $headers);
         $this->assertResponseIsSuccessful();
+    }
+
+    /**
+     * @return Generator
+     */
+    public function routesProvider(): Generator
+    {
+        yield [
+            ['GET', '/api/presences'],
+            ['GET', '/api/activities'],
+            ['GET', '/api/certificates'],
+            ['GET', '/api/users'],
+            ['GET', '/api/media_objects'],
+        ];
     }
 
     public function getToken(): void
