@@ -9,7 +9,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -135,6 +134,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Groups({"read", "write"})
      */
     private ?int $roleInt = 1;
+
+    /**
+     * @var MediaObject|null
+     *
+     * @ORM\OneToOne(targetEntity="App\Entity\MediaObject", cascade={"all"})
+     * @Groups({"read", "write"})
+     */
+    private ?MediaObject $cover;
 
     public function __construct()
     {
@@ -373,11 +380,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->roleInt = $roleInt;
 
-        if (1 === $this->getRoleInt()){
+        if (1 === $this->getRoleInt()) {
             $this->setRoles(['ROLE_MEMBER']);
         }
 
-        if (32 === $this->getRoleInt()){
+        if (32 === $this->getRoleInt()) {
             $this->setRoles(['ROLE_ADMIN', 'ROLE_MEMBER']);
         }
 
@@ -407,5 +414,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __call($name, $arguments)
     {
         return $this->username;
+    }
+
+    /**
+     * @return MediaObject|null
+     */
+    public function getCover(): ?MediaObject
+    {
+        return $this->cover;
+    }
+
+    /**
+     * @param MediaObject|null $cover
+     *
+     * @return User
+     */
+    public function setCover(?MediaObject $cover): User
+    {
+        $this->cover = $cover;
+
+        return $this;
     }
 }
