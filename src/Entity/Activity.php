@@ -122,7 +122,7 @@ class Activity
     /**
      * @var Collection|null
      *
-     * @ORM\OneToMany(targetEntity=MediaObject::class, mappedBy="poster", cascade={"all"})
+     * @ORM\OneToMany(targetEntity=MediaObject::class, mappedBy="activity", cascade={"all"})
      */
     private ?Collection $posters;
 
