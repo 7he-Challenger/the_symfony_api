@@ -72,8 +72,7 @@ class MediaObject
      * @var string|null
      *
      * @ApiProperty(iri="http://schema.org/contentUrl")
-     *
-     * @Groups({"media_object_read"})
+     * @Groups({"activity:read", "user:read"})
      */
     public ?string $contentUrl;
 
@@ -84,7 +83,7 @@ class MediaObject
      *
      * @Vich\UploadableField(mapping="media_object", fileNameProperty="filePath")
      */
-    public ?File $file;
+    public ?File $file=null;
 
     /**
      * @var string|null
@@ -94,12 +93,9 @@ class MediaObject
     public ?string $filePath;
 
     /**
-     * @var Activity|null
-     *
      * @ORM\ManyToOne(targetEntity=Activity::class, inversedBy="posters")
-     * @ORM\JoinColumn(nullable=false, referencedColumnName="id", nullable=true)
      */
-    private ?Activity $activity;
+    private $activity;
 
     /**
      * @return int|null
@@ -169,20 +165,12 @@ class MediaObject
         return $this;
     }
 
-    /**
-     * @return Activity|null
-     */
     public function getActivity(): ?Activity
     {
         return $this->activity;
     }
 
-    /**
-     * @param Activity|null $activity
-     *
-     * @return MediaObject
-     */
-    public function setActivity(?Activity $activity): MediaObject
+    public function setActivity(?Activity $activity): self
     {
         $this->activity = $activity;
 

@@ -27,8 +27,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ApiResource(
  *     security="is_granted('ROLE_ADMIN') or is_granted('ROLE_MEMBER')",
- *     normalizationContext={"groups"="read"},
- *     denormalizationContext={"groups"="write"},
+ *     normalizationContext={"groups"="user:read"},
+ *     denormalizationContext={"groups"="user:write"},
  *     collectionOperations={
  *          "get",
  *          "post" = {
@@ -45,7 +45,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id()
      * @ORM\Column()
      * @ORM\GeneratedValue()
-     * @Groups({"read"})
+     * @Groups({"user:read"})
      */
     private int $id;
 
@@ -57,7 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", unique=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      * @Assert\NotBlank(groups={"create"})
      */
     private string $username;
@@ -65,14 +65,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      */
     private ?string $firstname = null;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      */
     private ?string $lastname = null;
 
@@ -84,7 +84,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToOne(targetEntity=UserInformation::class, cascade={"persist", "remove"})
      *
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      */
     private ?UserInformation $userInfo;
 
@@ -98,7 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string|null
      *
-     * @Groups("write")
+     * @Groups("user:write")
      *
      * @SerializedName("password")
      * @Assert\NotBlank(groups={"create"})
@@ -109,7 +109,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var DateTime|null
      *
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"read"})
+     * @Groups({"user:read"})
      */
     private DateTime $createdAt;
 
@@ -122,7 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var int|null
      *
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      */
     private ?int $userType = 1;
 
@@ -131,7 +131,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @SerializedName("role")
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      */
     private ?int $roleInt = 1;
 
@@ -139,7 +139,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var MediaObject|null
      *
      * @ORM\OneToOne(targetEntity="App\Entity\MediaObject", cascade={"all"})
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      */
     private ?MediaObject $cover;
 

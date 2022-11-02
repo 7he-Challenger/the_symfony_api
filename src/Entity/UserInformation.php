@@ -29,23 +29,16 @@ class UserInformation
     /**
      * @ORM\Column(type="string", nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      */
     private ?string $address;
 
     /**
      * @ORM\Column(type="string", nullable=true)
      *
-     * @Groups({"read", "write"})
+     * @Groups({"user:read", "user:write"})
      */
     private ?string $phone;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     *
-     * @Groups({"read", "write"})
-     */
-    private ?string $photos;
 
     /**
      * @return string|null
@@ -83,26 +76,6 @@ class UserInformation
     public function setPhone(?string $phone): UserInformation
     {
         $this->phone = $phone;
-
-        return $this;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPhotos(): ?string
-    {
-        return $this->photos;
-    }
-
-    /**
-     * @param string|null $photos
-     *
-     * @return UserInformation
-     */
-    public function setPhotos(?string $photos): UserInformation
-    {
-        $this->photos = $photos;
 
         return $this;
     }

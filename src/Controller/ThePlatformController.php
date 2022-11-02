@@ -5,6 +5,7 @@
 
 namespace App\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,7 +18,7 @@ class ThePlatformController extends AbstractController
    /**
     * @Route("/", name="home_page")
     */
-    public function homePage(): Response
+    public function homePage(EntityManagerInterface $entityManager): Response
     {
         return $this->render('home-page/home.html.twig' ,  ['team' => 'The Challengers']);
     }

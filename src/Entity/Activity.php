@@ -16,12 +16,18 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Class Activity.
  *
  * @ORM\Entity()
- * @ApiResource(security="is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')")
+ * @ApiResource(security="is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')",
+ *     collectionOperations={"get", "post"},
+ *     itemOperations={"get", "post", "put", "delete"},
+ *     normalizationContext={"groups"="activity:read"},
+ *     denormalizationContext={"groups"="activity:write"},
+ * )
  * @ApiFilter(DateFilter::class, properties={"startDate", "endDate"})
  * @ApiFilter(SearchFilter::class, properties={"title":"partial", "description":"partial", "isEnable": "exact", "isPublic": "exact"})
  */
@@ -37,6 +43,7 @@ class Activity
      * @ORM\Id()
      * @ORM\Column()
      * @ORM\GeneratedValue()
+     * @Groups({"activity:read", "activity:write"})
      */
     private ?int $id;
 
@@ -44,6 +51,8 @@ class Activity
      * @var string|null
      *
      * @ORM\Column(type="string", nullable=true)
+     *
+     * @Groups({"activity:read", "activity:write"})
      */
     private ?string $title;
 
@@ -51,6 +60,7 @@ class Activity
      * @var string|null
      *
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"activity:read", "activity:write"})
      */
     private ?string $description;
 
@@ -62,6 +72,7 @@ class Activity
      *     },
      * })
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"activity:read", "activity:write"})
      */
     private ?DateTime $startDate;
 
@@ -74,6 +85,7 @@ class Activity
      * })
      *
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"activity:read", "activity:write"})
      */
     private ?DateTime $endDate;
 
@@ -81,6 +93,7 @@ class Activity
      * @var string|null
      *
      * @ORM\Column(type="string", nullable=true)
+     * @Groups({"activity:read", "activity:write"})
      */
     private ?string $locale;
 
@@ -88,6 +101,7 @@ class Activity
      * @var string|null
      *
      * @ORM\Column(type="string", nullable=true)
+     * @Groups({"activity:read", "activity:write"})
      */
     private ?string $intervenant;
 
@@ -95,6 +109,7 @@ class Activity
      * @var array|null
      *
      * @ORM\Column(type="simple_array", nullable=true)
+     * @Groups({"activity:read", "activity:write"})
      */
     private ?array $sponsors;
 
@@ -102,6 +117,7 @@ class Activity
      * @var int|null
      *
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"activity:read", "activity:write"})
      */
     private ?int $type;
 
@@ -109,6 +125,7 @@ class Activity
      * @var bool|null
      *
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"activity:read", "activity:write"})
      */
     private ?bool $isPublic;
 
@@ -116,15 +133,15 @@ class Activity
      * @var bool|null
      *
      * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"activity:read", "activity:write"})
      */
     private ?bool $isEnable;
 
     /**
-     * @var Collection|null
-     *
-     * @ORM\OneToMany(targetEntity=MediaObject::class, mappedBy="activity", cascade={"all"})
+     * @ORM\OneToMany(targetEntity=MediaObject::class, mappedBy="activity")
+     * @Groups({"activity:read", "activity:write"})
      */
-    private ?Collection $posters;
+    private $posters;
 
     /**
      * Activity constructor
@@ -346,33 +363,31 @@ class Activity
     }
 
     /**
-     * @return Collection
+     * @return Collection<int, MediaObject>
      */
-    public function getPosters()
+    public function getPosters(): Collection
     {
         return $this->posters;
     }
 
-    /**
-     * @param MediaObject|null $posters
-     *
-     * @return Activity
-     */
-    public function addPosters(?MediaObject $posters): Activity
+    public function addPoster(MediaObject $poster): self
     {
-        $this->posters->add($posters);
+        if (!$this->posters->contains($poster)) {
+            $this->posters[] = $poster;
+            $poster->setActivity($this);
+        }
 
         return $this;
     }
 
-    /**
-     * @param MediaObject|null $posters
-     *
-     * @return Activity
-     */
-    public function removePosters(?MediaObject $posters): Activity
+    public function removePoster(MediaObject $poster): self
     {
-        $this->posters->removeElement($posters);
+        if ($this->posters->removeElement($poster)) {
+            // set the owning side to null (unless already changed)
+            if ($poster->getActivity() === $this) {
+                $poster->setActivity(null);
+            }
+        }
 
         return $this;
     }
