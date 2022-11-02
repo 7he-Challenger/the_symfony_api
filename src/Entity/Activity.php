@@ -23,8 +23,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *
  * @ORM\Entity()
  * @ApiResource(security="is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')",
- *     collectionOperations={"get", "post"},
- *     itemOperations={"get", "post", "put", "delete"},
  *     normalizationContext={"groups"="activity:read"},
  *     denormalizationContext={"groups"="activity:write"},
  * )
