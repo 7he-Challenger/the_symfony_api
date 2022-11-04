@@ -136,10 +136,10 @@ class Activity
     private ?bool $isEnable;
 
     /**
-     * @ORM\OneToMany(targetEntity=MediaObject::class, mappedBy="activity")
+     * @ORM\OneToMany(targetEntity=MediaObject::class, mappedBy="activity", cascade={"all"})
      * @Groups({"activity:read", "activity:write"})
      */
-    private $posters;
+    private ?Collection $posters;
 
     /**
      * Activity constructor
