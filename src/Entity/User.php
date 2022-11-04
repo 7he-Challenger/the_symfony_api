@@ -19,6 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -38,6 +39,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *)
  * @ApiFilter(DateFilter::class, properties={"createdAt"})
  * @ApiFilter(SearchFilter::class, properties={"username":"partial", "firstname":"partial", "lastname": "partial", "userType": "exact", "roleInt": "exact", "isEnable": "exact"})
+ * @ApiFilter(OrderFilter::class, properties={"id","createdAt"}, arguments={"orderParameterName": "order"})
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
