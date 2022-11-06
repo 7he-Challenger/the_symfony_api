@@ -26,7 +26,13 @@ class LoginListener
             return;
         }
 
-        $payload['user'] = ['id' => $user->getId(), 'username' => $user->getUsername(), 'firstname' => $user->getFirstname(), 'lastname' => $user->getLastname()];
+        $payload['user'] = [
+            'id' => $user->getId(),
+            'username' => $user->getUsername(),
+            'firstname' => $user->getFirstname(),
+            'lastname' => $user->getLastname(),
+            'img' => 'media/'.($user->getCover() ? $user->getCover()->getFilePath() : ''),
+        ];
         $authenticationSuccessEvent->setData($payload);
     }
 }
