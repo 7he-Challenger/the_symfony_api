@@ -17,8 +17,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
  * Class Presence.
  *
  * @ORM\Entity()
- * @ApiResource()
- * @ApiFilter(SearchFilter::class, properties={"isPresent": "exact", "user": "exact", "user.username": "partial"})
+ * @ApiResource(
+ *     collectionOperations={"get", "post"},
+ *     itemOperations={"get", "put"}
+ * )
+ * @ApiFilter(SearchFilter::class, properties={"isPresent": "exact", "user": "exact", "user.username": "partial", "activity": "exact"})
  * @ApiFilter(DateFilter::class, properties={"date"})
  */
 class Presence

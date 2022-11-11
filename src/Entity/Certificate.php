@@ -17,6 +17,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *
  * @ORM\Entity()
  * @ApiResource(
+ *     collectionOperations={"post", "get"},
+ *     itemOperations={"get", "put"},
  *     normalizationContext={"groups"="read"},
  *     denormalizationContext={"groups"="write"}
  * )
@@ -57,6 +59,11 @@ class Certificate
      * @Groups({"read", "write"})
      */
     private ?string $title;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $isValid;
 
     /**
      * @throws Exception
@@ -150,6 +157,18 @@ class Certificate
     public function setTitle(?string $title): Certificate
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function isIsValid(): ?bool
+    {
+        return $this->isValid;
+    }
+
+    public function setIsValid(?bool $isValid): self
+    {
+        $this->isValid = $isValid;
 
         return $this;
     }

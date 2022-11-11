@@ -23,7 +23,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * Class Activity.
  *
  * @ORM\Entity()
- * @ApiResource(security="is_granted('ROLE_ADMIN') or is_granted('ROLE_USER')",
+ * @ApiResource(
+ *     collectionOperations={
+ *          "post" = {"security" = "is_granted('ROLE_ADMIN')"},
+ *          "get"
+ *     },
+ *     itemOperations={"get", "delete", "put"},
  *     normalizationContext={"groups"="activity:read"},
  *     denormalizationContext={"groups"="activity:write"},
  * )
@@ -43,7 +48,7 @@ class Activity
      * @ORM\Id()
      * @ORM\Column()
      * @ORM\GeneratedValue()
-     * @Groups({"activity:read", "activity:write"})
+     * @Groups({"activity:read", "activity:write", "registration:read"})
      */
     private ?int $id;
 
@@ -52,7 +57,7 @@ class Activity
      *
      * @ORM\Column(type="string", nullable=true)
      *
-     * @Groups({"activity:read", "activity:write"})
+     * @Groups({"activity:read", "activity:write", "registration:read"})
      */
     private ?string $title;
 
@@ -72,7 +77,7 @@ class Activity
      *     },
      * })
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"activity:read", "activity:write"})
+     * @Groups({"activity:read", "activity:write", "registration:read"})
      */
     private ?DateTime $startDate;
 
@@ -85,7 +90,7 @@ class Activity
      * })
      *
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"activity:read", "activity:write"})
+     * @Groups({"activity:read", "activity:write", "registration:read"})
      */
     private ?DateTime $endDate;
 
@@ -93,7 +98,7 @@ class Activity
      * @var string|null
      *
      * @ORM\Column(type="string", nullable=true)
-     * @Groups({"activity:read", "activity:write"})
+     * @Groups({"activity:read", "activity:write", "registration:read"})
      */
     private ?string $locale;
 
@@ -101,7 +106,7 @@ class Activity
      * @var string|null
      *
      * @ORM\Column(type="string", nullable=true)
-     * @Groups({"activity:read", "activity:write"})
+     * @Groups({"activity:read", "activity:write", "registration:read"})
      */
     private ?string $intervenant;
 
@@ -109,7 +114,7 @@ class Activity
      * @var array|null
      *
      * @ORM\Column(type="simple_array", nullable=true)
-     * @Groups({"activity:read", "activity:write"})
+     * @Groups({"activity:read", "activity:write", "registration:read"})
      */
     private ?array $sponsors;
 
@@ -117,7 +122,7 @@ class Activity
      * @var int|null
      *
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"activity:read", "activity:write"})
+     * @Groups({"activity:read", "activity:write", "registration:read"})
      */
     private ?int $type;
 
@@ -125,7 +130,7 @@ class Activity
      * @var bool|null
      *
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"activity:read", "activity:write"})
+     * @Groups({"activity:read", "activity:write", "registration:read"})
      */
     private ?bool $isPublic;
 
@@ -133,7 +138,7 @@ class Activity
      * @var bool|null
      *
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"activity:read", "activity:write"})
+     * @Groups({"activity:read", "activity:write", "registration:read"})
      */
     private ?bool $isEnable;
 
@@ -144,9 +149,21 @@ class Activity
     private ?Collection $posters;
 
     /**
-     * @ORM\OneToMany(targetEntity=Presence::class, mappedBy="activity")
+     * @ORM\OneToMany(targetEntity=Presence::class, mappedBy="activity", cascade={"remove"})
      */
-    private $presences;
+    private Collection $presences;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Registration::class, mappedBy="event", cascade={"all"})
+     */
+    private Collection $registrations;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     *
+     * @Groups({"activity:read", "activity:write", "registration:read"})
+     */
+    private ?int $seats;
 
     /**
      * Activity constructor
@@ -157,6 +174,7 @@ class Activity
         $this->isPublic = false;
         $this->posters = new ArrayCollection();
         $this->presences = new ArrayCollection();
+        $this->registrations = new ArrayCollection();
     }
 
     /**
@@ -424,6 +442,62 @@ class Activity
                 $presence->setActivity(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Registration>
+     */
+    public function getRegistrations(): Collection
+    {
+        return $this->registrations;
+    }
+
+    public function addRegistration(Registration $registration): self
+    {
+        if (!$this->registrations->contains($registration)) {
+            $this->registrations[] = $registration;
+            $registration->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRegistration(Registration $registration): self
+    {
+        if ($this->registrations->removeElement($registration)) {
+            // set the owning side to null (unless already changed)
+            if ($registration->getEvent() === $this) {
+                $registration->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getSeats(): ?int
+    {
+        return $this->seats;
+    }
+
+    public function setSeats(?int $seats): self
+    {
+        $this->seats = $seats;
+
+        return $this;
+    }
+
+    public function decreaseSeats(): Activity
+    {
+        $this->seats = $this->seats > 0 ? $this->seats - 1 : 0;
+
+        return $this;
+    }
+
+    public function increaseSeats(): Activity
+    {
+        $this->seats = $this->seats > 0 ? $this->seats + 1 : 0;
 
         return $this;
     }

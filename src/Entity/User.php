@@ -30,11 +30,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     security="is_granted('ROLE_ADMIN') or is_granted('ROLE_MEMBER')",
  *     normalizationContext={"groups"="user:read"},
  *     denormalizationContext={"groups"="user:write"},
+ *     itemOperations={"put" = {"security"="is_granted('ROLE_ADMIN') or object == user"},"get", "delete"},
  *     collectionOperations={
- *          "get",
- *          "post" = {
- *              "validation_groups"={"Default", "create"}
- *          }
+ *          "post" = {"method" = "POST", "security"="is_granted('ROLE_ADMIN')", "validation_groups"={"Default", "create"}},
+ *          "get"
  *     }
  *)
  * @ApiFilter(DateFilter::class, properties={"createdAt"})
