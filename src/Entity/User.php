@@ -138,12 +138,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToOne(targetEntity="App\Entity\MediaObject", cascade={"all"})
      * @Groups({"user:read", "user:write"})
      */
-    private ?MediaObject $cover;
+    private ?MediaObject $cover = null;
 
     /**
      * @ORM\OneToMany(targetEntity=Presence::class, mappedBy="user")
      */
-    private $presences;
+    private Collection $presences;
 
     public function __construct()
     {
