@@ -52,10 +52,24 @@ class Presence
     private DateTime $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="presences")
-     * @ORM\JoinColumn(nullable=false, referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity=Activity::class, inversedBy="presences")
      */
-    private User $user;
+    private ?Activity $activity;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="presences")
+     */
+    private ?User $user;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private ?string $email;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private ?bool $isGuest;
 
     /**
      * @return int
@@ -117,22 +131,50 @@ class Presence
         return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser(): User
+    public function getActivity(): ?Activity
+    {
+        return $this->activity;
+    }
+
+    public function setActivity(?Activity $activity): self
+    {
+        $this->activity = $activity;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     *
-     * @return Presence
-     */
-    public function setUser(User $user): Presence
+    public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function isGuest(): ?bool
+    {
+        return $this->isGuest;
+    }
+
+    public function setGuest(?bool $guest): self
+    {
+        $this->isGuest = $guest;
 
         return $this;
     }

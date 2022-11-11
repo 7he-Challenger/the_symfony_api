@@ -144,6 +144,11 @@ class Activity
     private ?Collection $posters;
 
     /**
+     * @ORM\OneToMany(targetEntity=Presence::class, mappedBy="activity")
+     */
+    private $presences;
+
+    /**
      * Activity constructor
      */
     public function __construct()
@@ -151,6 +156,7 @@ class Activity
         $this->isEnable = true;
         $this->isPublic = false;
         $this->posters = new ArrayCollection();
+        $this->presences = new ArrayCollection();
     }
 
     /**
@@ -386,6 +392,36 @@ class Activity
             // set the owning side to null (unless already changed)
             if ($poster->getActivity() === $this) {
                 $poster->setActivity(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Presence>
+     */
+    public function getPresences(): Collection
+    {
+        return $this->presences;
+    }
+
+    public function addPresence(Presence $presence): self
+    {
+        if (!$this->presences->contains($presence)) {
+            $this->presences[] = $presence;
+            $presence->setActivity($this);
+        }
+
+        return $this;
+    }
+
+    public function removePresence(Presence $presence): self
+    {
+        if ($this->presences->removeElement($presence)) {
+            // set the owning side to null (unless already changed)
+            if ($presence->getActivity() === $this) {
+                $presence->setActivity(null);
             }
         }
 

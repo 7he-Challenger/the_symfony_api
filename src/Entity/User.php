@@ -116,11 +116,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private DateTime $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Presence::class, mappedBy="user")
-     */
-    private Collection $presences;
-
-    /**
      * @var int|null
      *
      * @ORM\Column(type="integer", nullable=true)
@@ -145,11 +140,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private ?MediaObject $cover;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Presence::class, mappedBy="user")
+     */
+    private $presences;
+
     public function __construct()
     {
         $this->isEnable = true;
-        $this->presences = new ArrayCollection();
         $this->createdAt = new DateTime('now');
+        $this->presences = new ArrayCollection();
     }
 
     /**
@@ -292,40 +292,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return ArrayCollection
-     */
-    public function getPresences(): ArrayCollection
-    {
-        return $this->presences;
-    }
-
-    /**
-     * @param Presence $presence
-     *
-     * @return User
-     */
-    public function addPresence(Presence $presence): User
-    {
-        if (!$this->presences->contains($presence)) {
-            $this->presences->add($presence);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param Presence $presence
-     *
-     * @return User
-     */
-    public function removePresence(Presence $presence): User
-    {
-        $this->presences->removeElement($presence);
-
-        return $this;
-    }
-
-    /**
      * @return string|null
      */
     public function getPlainPassword(): ?string
@@ -434,6 +400,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCover(?MediaObject $cover): User
     {
         $this->cover = $cover;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Presence>
+     */
+    public function getPresences(): Collection
+    {
+        return $this->presences;
+    }
+
+    public function addPresence(Presence $presence): self
+    {
+        if (!$this->presences->contains($presence)) {
+            $this->presences[] = $presence;
+            $presence->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePresence(Presence $presence): self
+    {
+        if ($this->presences->removeElement($presence)) {
+            // set the owning side to null (unless already changed)
+            if ($presence->getUser() === $this) {
+                $presence->setUser(null);
+            }
+        }
 
         return $this;
     }
