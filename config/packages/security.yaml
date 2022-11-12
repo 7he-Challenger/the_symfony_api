@@ -36,8 +36,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/, roles: [ROLE_ADMIN, ROLE_MEMBER] }
-        - { path: ^/api, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        #- { path: ^/api/, roles: [ROLE_ADMIN, ROLE_MEMBER] } all security is now handled in the entity annotations
 
 when@test:
     security:
