@@ -21,6 +21,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use Symfony\Component\Serializer\Annotation\SerializedName;
+use App\Query\CustomUserFilter;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -37,7 +38,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  *     }
  *)
  * @ApiFilter(DateFilter::class, properties={"createdAt"})
- * @ApiFilter(SearchFilter::class, properties={"username":"partial", "firstname":"partial", "lastname": "partial", "userType": "exact", "roleInt": "exact", "isEnable": "exact"})
+ * @ApiFilter(CustomUserFilter::class, properties={
+ *     "username" : "ipartial",
+ *     "firstname":"ipartial",
+ *     "lastname": "ipartial",
+ *     "userType": "exact",
+ *     "roleInt": "exact",
+ *     "isEnable": "exact",
+ *     "userInfo.phone": "partial",
+ *     "userInfo.address": "ipartial"
+ *     })
  * @ApiFilter(OrderFilter::class, properties={"id","createdAt"}, arguments={"orderParameterName": "order"})
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -243,7 +253,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->username;
     }
 
-    public function setUsername(string $username)
+    public function setUsername(string $username): User
     {
         $this->username = $username;
 
