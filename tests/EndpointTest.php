@@ -33,9 +33,9 @@ class EndpointTest extends WebTestCase
         // generate client and token
         $this->getToken();
 
-        // test without token
-        $this->client->request($method, $route, [], []);
-        self::assertResponseStatusCodeSame(401);
+        // test without token || this is not required anymore
+//        $this->client->request($method, $route, [], []);
+//        self::assertResponseStatusCodeSame(401);
 
         $headers = [
             'HTTP_AUTHORIZATION' => "Bearer $this->token",
@@ -54,6 +54,7 @@ class EndpointTest extends WebTestCase
     {
         yield [
             ['GET', '/api/presences'],
+            ['GET', '/api/registrations'],
             ['GET', '/api/activities'],
             ['GET', '/api/certificates'],
             ['GET', '/api/users'],
