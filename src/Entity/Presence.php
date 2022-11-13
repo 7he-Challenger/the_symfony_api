@@ -18,7 +18,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
  *
  * @ORM\Entity()
  * @ApiResource(
- *     security="is_grated('ROLE_ADMIN') or object.user == user",
+ *     security="is_granted('ROLE_ADMIN') or object.user == user",
  *     collectionOperations={"get", "post"},
  *     itemOperations={"get", "put"}
  * )
